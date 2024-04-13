@@ -1,1 +1,1 @@
-7/1/24 - 6.18PM - tryna figure out git, i think i uploaded my c++ docs somewhere offline/online idk. i just wanna backup and save my progress
+13/4/2024 - 10:00PM : Directly connecting VScode to git, still no good on CLI though
