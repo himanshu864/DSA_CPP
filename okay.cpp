@@ -44,6 +44,8 @@ class Codec
 {
     TreeNode *helper(queue<string> &q)
     {
+        // Again preorder traversal queue
+        // and recursively attach root left right
         string x = q.front();
         q.pop();
 
@@ -60,6 +62,8 @@ public:
     // Encodes a tree to a single string.
     string serialize(TreeNode *root)
     {
+        // easy convert string by preorder traversal
+        // use comma necassary as multiple digit interger and negative signs
         if (!root)
             return "*";
         return to_string(root->val) + "," + serialize(root->left) + "," + serialize(root->right);
@@ -68,6 +72,8 @@ public:
     // Decodes your encoded data to tree.
     TreeNode *deserialize(string data)
     {
+        // don't know how to use stringstream
+        // convert string to queue, separated by comma
         queue<string> q;
         string s = "";
         for (char c : data)
