@@ -1,39 +1,41 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 using namespace std;
 
-// for each sliding window, shrink until all elements inside window can be increased upto righest ideal element
-// as operations can't decrease.
-// if ideal sum = ideal * number of elements minus(-) current sum > k
-// shrink i++
-
+// implicit reference lambda functions
 class Solution
 {
 public:
-    int maxFrequency(vector<int> &nums, int k)
+    string customSortString(string order, string s)
     {
-        sort(nums.begin(), nums.end());
-        long long ans = 0, sum = 0;
-        for (long long i = 0, j = 0; j < nums.size(); j++)
-        {
-            long long ideal = nums[j];
-            sum += ideal;
-            while ((j - i + 1) * ideal - sum > k)
-                sum -= nums[i++];
-            ans = max(ans, j - i + 1);
-        }
-        return ans;
+        sort(s.begin(), s.end(),
+             [&](char a, char b)
+             { return order.find(a) < order.find(b); });
+        return s;
     }
 };
 
 int main()
 {
     Solution sol;
-    vector<int> nums = {1, 4, 5, 8, 13};
-    int k = 5;
-    cout << sol.maxFrequency(nums, k) << endl;
+    string order = "bcafg";
+    string s = "abcd";
+    cout << sol.customSortString(order, s) << endl;
+
+    // lambda functions
+    // syntax:
+    // [lambda introducer](parameters list){function and return}(passing value)
+    cout << [](int x)
+    { return x + 2; }(2) << endl;
+
+    cout << [](int x, int y)
+    { return x + y; }(5, 7) << endl;
+
+    auto sum = [](int x, int y)
+    { return x + y; };
+    cout << sum(3, 6) << endl;
+
     return 0;
 }
 
-// https://leetcode.com/problems/frequency-of-the-most-frequent-element/
+// https://leetcode.com/problems/custom-sort-string/
