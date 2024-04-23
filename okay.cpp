@@ -29,34 +29,41 @@ void inorder(TreeNode *root)
 class Solution
 {
 public:
-    // Recursive solution
+    // Recursive Solution
     /*
-    TreeNode* searchBST(TreeNode* root, int val) {
-        if(!root)
-            return NULL;
-
-        if(root->val == val)
-            return root;
-        else if(root->val > val)
-            return searchBST(root->left, val);
+        TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if (!root)
+            return new TreeNode(val);
+        if (root->val > val)
+            root->left = insertIntoBST(root->left, val);
         else
-            return searchBST(root->right, val);
+            root->right = insertIntoBST(root->right, val);
+        return root;
     }
-    */
 
-    // iterative solution
-    TreeNode *searchBST(TreeNode *root, int val)
+    */
+    // Iterative Solution
+    TreeNode *insertIntoBST(TreeNode *root, int val)
     {
-        while (root)
+        if (!root)
+            return new TreeNode(val);
+
+        TreeNode *tail = NULL, *temp = root;
+        while (temp)
         {
-            if (root->val == val)
-                return root;
-            else if (root->val > val)
-                root = root->left;
+            tail = temp;
+            if (temp->val > val)
+                temp = temp->left;
             else
-                root = root->right;
+                temp = temp->right;
         }
-        return NULL;
+
+        if (tail->val > val)
+            tail->left = new TreeNode(val);
+        else
+            tail->right = new TreeNode(val);
+
+        return root;
     }
 };
 
@@ -74,8 +81,13 @@ int main()
     inorder(root);
     cout << endl;
 
-    int val = 25;
-    cout << "is " << val << " present in bst? " << (sol.searchBST(root, val) ? "Yes" : "No") << endl;
+    int val = 45;
+    sol.insertIntoBST(root, val);
+
+    inorder(root);
+    cout << endl;
 
     return 0;
 }
+
+// https://leetcode.com/problems/insert-into-a-binary-search-tree/
