@@ -1,61 +1,81 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <unordered_set>
+#include <map>
+#include <set>
 using namespace std;
+
+class TreeNode
+{
+public:
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+void inorder(TreeNode *root)
+{
+    if (!root)
+        return;
+
+    inorder(root->left);
+    cout << root->val << " ";
+    inorder(root->right);
+}
 
 class Solution
 {
 public:
-    int openLock(vector<string> &deadends, string target)
+    // Recursive solution
+    /*
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if(!root)
+            return NULL;
+
+        if(root->val == val)
+            return root;
+        else if(root->val > val)
+            return searchBST(root->left, val);
+        else
+            return searchBST(root->right, val);
+    }
+    */
+
+    // iterative solution
+    TreeNode *searchBST(TreeNode *root, int val)
     {
-        unordered_set<string> visited(deadends.begin(), deadends.end());
-
-        if (visited.count("0000"))
-            return -1;
-
-        queue<string> q;
-        q.push("0000");
-        for (int ans = 0; q.size(); ans++)
+        while (root)
         {
-            int n = q.size();
-            while (n--)
-            {
-                string output = q.front();
-                q.pop();
-
-                if (output == target)
-                    return ans;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    string up = output, down = output;
-                    up[i] = (up[i] == '9') ? '0' : (up[i] + 1);
-                    down[i] = (down[i] == '0') ? '9' : (down[i] - 1);
-
-                    if (!visited.count(up))
-                    {
-                        q.push(up);
-                        visited.insert(up);
-                    }
-                    if (!visited.count(down))
-                    {
-                        q.push(down);
-                        visited.insert(down);
-                    }
-                }
-            }
+            if (root->val == val)
+                return root;
+            else if (root->val > val)
+                root = root->left;
+            else
+                root = root->right;
         }
-        return -1;
+        return NULL;
     }
 };
 
 int main()
 {
     Solution sol;
-    vector<string> deadends = {"0201", "0101", "0102", "1212", "2002"};
-    string target = "0202";
-    cout << sol.openLock(deadends, target) << endl;
-}
+    TreeNode *root = new TreeNode(30);
+    root->left = new TreeNode(20);
+    root->right = new TreeNode(40);
+    root->left->left = new TreeNode(10);
+    root->left->right = new TreeNode(25);
+    root->right->left = new TreeNode(35);
+    root->right->right = new TreeNode(50);
 
-// https://leetcode.com/problems/open-the-lock
+    inorder(root);
+    cout << endl;
+
+    int val = 25;
+    cout << "is " << val << " present in bst? " << (sol.searchBST(root, val) ? "Yes" : "No") << endl;
+
+    return 0;
+}
