@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <queue>
-#include <map>
-#include <set>
+#include <stack>
 using namespace std;
 
 class TreeNode
@@ -29,40 +27,34 @@ void inorder(TreeNode *root)
 class Solution
 {
 public:
-    // Recursive Solution
-    /*
-        TreeNode* insertIntoBST(TreeNode* root, int val) {
-        if (!root)
-            return new TreeNode(val);
-        if (root->val > val)
-            root->left = insertIntoBST(root->left, val);
-        else
-            root->right = insertIntoBST(root->right, val);
-        return root;
-    }
-
-    */
-    // Iterative Solution
-    TreeNode *insertIntoBST(TreeNode *root, int val)
+    TreeNode *bstFromPreorder(vector<int> &preorder)
     {
-        if (!root)
-            return new TreeNode(val);
-
-        TreeNode *tail = NULL, *temp = root;
-        while (temp)
+        TreeNode *root = new TreeNode(preorder[0]);
+        TreeNode *p = root;
+        stack<TreeNode *> st;
+        int i = 1;
+        while (i < preorder.size())
         {
-            tail = temp;
-            if (temp->val > val)
-                temp = temp->left;
+            if (preorder[i] < p->val)
+            {
+                p->left = new TreeNode(preorder[i++]);
+                st.push(p);
+                p = p->left;
+            }
             else
-                temp = temp->right;
+            {
+                if (st.size() && (preorder[i] > st.top()->val))
+                {
+                    p = st.top();
+                    st.pop();
+                }
+                else
+                {
+                    p->right = new TreeNode(preorder[i++]);
+                    p = p->right;
+                }
+            }
         }
-
-        if (tail->val > val)
-            tail->left = new TreeNode(val);
-        else
-            tail->right = new TreeNode(val);
-
         return root;
     }
 };
@@ -70,24 +62,13 @@ public:
 int main()
 {
     Solution sol;
-    TreeNode *root = new TreeNode(30);
-    root->left = new TreeNode(20);
-    root->right = new TreeNode(40);
-    root->left->left = new TreeNode(10);
-    root->left->right = new TreeNode(25);
-    root->right->left = new TreeNode(35);
-    root->right->right = new TreeNode(50);
+    vector<int> preorder = {8, 5, 1, 7, 10, 12};
+
+    TreeNode *root = sol.bstFromPreorder(preorder);
 
     inorder(root);
     cout << endl;
-
-    int val = 45;
-    sol.insertIntoBST(root, val);
-
-    inorder(root);
-    cout << endl;
-
     return 0;
 }
 
-// https://leetcode.com/problems/insert-into-a-binary-search-tree/
+// https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/
