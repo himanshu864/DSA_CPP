@@ -1,51 +1,79 @@
+// If in case of multiple inheritance having following inheritance path (A&B->C), both A and B have a function
+// with same name, then if a function with same name is called in C, then it would belong to which class A or B
+// This is known as Ambiguity Resolution in Inheritance
+
 #include <iostream>
-#include <vector>
-#include <queue>
-#include <unordered_map>
 using namespace std;
 
-class Solution
+class Base1
 {
 public:
-    bool validPath(int n, vector<vector<int>> &edges, int start, int end)
+    void greet()
     {
-        // My first fake submit
-        // haven't dont graphs yet
-        // don't wanna break 50 days streak
-        unordered_map<int, vector<int>> graph;
-        for (auto e : edges)
-        {
-            graph[e[0]].push_back(e[1]);
-            graph[e[1]].push_back(e[0]);
-        }
-        vector<bool> visited(n, 0);
-        queue<int> q;
-        q.push(start);
-        visited[start] = 1;
-        while (!q.empty())
-        {
-            int curr = q.front();
-            q.pop();
-            if (curr == end)
-                return 1;
-            for (auto &node : graph[curr])
-            {
-                if (!visited[node])
-                {
-                    visited[node] = 1;
-                    q.push(node);
-                }
-            }
-        }
-        return false;
+        cout << "How are you?" << endl;
     }
+};
+
+class Base2
+{
+public:
+    void greet()
+    {
+        cout << "Kaise ho?" << endl;
+    }
+};
+
+class Derived : public Base1, public Base2
+{
+    int a;
+
+public:
+    // Method to resolve ambiguity (using scope resolution operator)
+    void greet()
+    {
+        Base2 ::greet(); // It shopuld use greet() of class Base2
+    }
+};
+
+class B
+{
+public:
+    void say()
+    {
+        cout << "Hello world" << endl;
+    }
+};
+
+class D : public B
+{
+    int a;
+    // D's new say() method will override base class's say() method
+public:
+    // Ambiguity is resolved all by itself
+    // If we write a function with same name as in base class, then it gets overridden by derived class
+    void say()
+    {
+        cout << "Hello my beautiful people" << endl;
+    }
+    // If the above part wasn't there, then it inherits say of Base class B,
+    // and if we define say method in this class, then it overrides
 };
 
 int main()
 {
-    Solution sol;
-    cout << "stfu" << endl;
+    // Ambiguity 1 (Real Ambiguity Resolution)
+    Base1 base1obj;
+    Base2 base2obj;
+    base1obj.greet();
+    base2obj.greet();
+    Derived d;
+    d.greet(); // greet() is declared in both classes Base1 & Base2 (which one to inherit)
+
+    // Ambibuity 2
+    B b;
+    b.say();
+    D e;
+    e.say(); // class D overwrites say() function of class B
+
     return 0;
 }
-
-// https://leetcode.com/problems/find-if-path-exists-in-graph
