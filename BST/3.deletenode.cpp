@@ -62,88 +62,94 @@ public:
     }
 };
 
-// my iterative solution
-class Solution2
+// my iterative inspired by striver
+// can do better using functions and direct parent connect. but idk
+class Solution
 {
 public:
     TreeNode *deleteNode(TreeNode *root, int key)
     {
-        if (!root)
-            return NULL;
-
-        // search for key while keeping parent
         TreeNode *p = NULL;
-        TreeNode *temp = root;
-        while (temp && temp->val != key)
+        // search node
+        TreeNode *node = root;
+        while (node && node->val != key)
         {
-            p = temp;
-            if (temp->val > key)
-                temp = temp->left;
+            p = node;
+            if (node->val > key)
+                node = node->left;
             else
-                temp = temp->right;
+                node = node->right;
         }
 
-        // edge case root == key
+        // if root == NULL or node doesn't exist
+        if (!node)
+            return root;
+
+        // if delete root
         if (!p)
         {
-            if (!temp->left && !temp->right)
+            // handle later, fuck you future me
+            // fuck you too past me
+            // haha lol you both are past me
+            // wait
+            if (!root->left && !root->right)
                 return NULL;
-            else if (!temp->left && temp->right)
-                return temp->right;
-            else if (temp->left && !temp->right)
-                return temp->left;
+            else if (!root->left)
+                return root->right;
+            else if (!root->right)
+                return root->left;
             else
             {
-                p = temp;
-                TreeNode *pre = temp->left;
+                TreeNode *pre = root->left;
                 while (pre->right)
-                {
-                    p = pre;
                     pre = pre->right;
-                }
-                temp->val = pre->val;
-                temp = pre;
+                pre->right = root->right;
+                return root->left;
             }
         }
 
-        // if key doesn't exist, take care of
-        // keep modifying until degree 0/1, then delete
-        while (temp)
+        // for leaf node, direct delete
+        if (!node->left && !node->right)
         {
-            // leaf node, direct delete
-            // VVVV.IMPORTANT : to connect to left when parent = delete node, as it indicates, left child was predecessor inorder.
-            if (!temp->left && !temp->right)
+            if (p->val > node->val)
+                p->left = NULL;
+            else
+                p->right = NULL;
+        }
+        // for single child, direct connect to parent
+        else if (!node->left)
+        {
+            if (p->val > node->val)
+                p->left = node->right;
+            else
+                p->right = node->right;
+        }
+        else if (!node->right)
+        {
+            if (p->val > node->val)
+                p->left = node->left;
+            else
+                p->right = node->left;
+        }
+        // both childs, connect parent to left child
+        // and conect right child to inorder predecessor
+        else
+        {
+            TreeNode *store_right = node->right;
+            if (p->val > node->val)
             {
-                (p->val >= temp->val) ? (p->left = NULL) : (p->right = NULL);
-                temp = NULL;
+                p->left = node->left;
+                node = p->left;
             }
-            // one degree
-            else if (!temp->left && temp->right)
-            {
-                (p->val >= temp->val) ? (p->left = temp->right) : (p->right = temp->right);
-                temp = NULL;
-            }
-            else if (temp->left && !temp->right)
-            {
-                (p->val >= temp->val) ? (p->left = temp->left) : (p->right = temp->left);
-                temp = NULL;
-            }
-            // two degree
             else
             {
-                // find preceding inorder while keeping parent
-                p = temp;
-                TreeNode *pre = temp->left;
-                while (pre->right)
-                {
-                    p = pre;
-                    pre = pre->right;
-                }
-                // modify node
-                temp->val = pre->val;
-                // delete pre node by using while loop
-                temp = pre;
+                p->right = node->left;
+                node = p->right;
             }
+            TreeNode *pre = node;
+            while (pre->right)
+                pre = pre->right;
+            pre->right = store_right;
         }
         return root;
     }
