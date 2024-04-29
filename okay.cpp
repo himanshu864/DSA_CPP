@@ -1,79 +1,87 @@
 #include <iostream>
-#include <vector>
-#include <stack>
 using namespace std;
 
-class TreeNode
+/*
+                 |---------> Class Test -------->|
+Class Student ---                                 ---> Class Result
+                 |--------> Class Sports ------->|
+*/
+
+// We solved the issue of getting roll no in result class twice (from both classes test and sports)
+
+class Student
 {
+protected:
+    int roll_no;
+
 public:
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    void set_number(int a)
+    {
+        roll_no = a;
+    }
+    void print_number()
+    {
+        cout << "Your Roll Number: " << roll_no << endl;
+    }
 };
 
-void inorder(TreeNode *root)
+class Test : virtual public Student
 {
-    if (!root)
-        return;
-
-    inorder(root->left);
-    cout << root->val << " ";
-    inorder(root->right);
-}
-
-class BSTIterator
-{
-    stack<TreeNode *> st;
+protected:
+    float maths, physics;
 
 public:
-    BSTIterator(TreeNode *root)
+    void set_marks(float m1, float m2)
     {
-        while (root)
-        {
-            st.push(root);
-            root = root->left;
-        }
+        maths = m1;
+        physics = m2;
     }
 
-    int next()
+    void print_marks()
     {
-        TreeNode *root = st.top();
-        st.pop();
-        for (TreeNode *temp = root->right; temp; temp = temp->left)
-            st.push(temp);
-        return root->val;
+        cout << "Maths: " << maths << endl;
+        cout << "Physics: " << physics << endl;
     }
+};
 
-    bool hasNext()
+class Sports : virtual public Student
+{
+protected:
+    float score;
+
+public:
+    void set_score(int a)
     {
-        return st.size();
+        score = a;
+    }
+    void print_score()
+    {
+        cout << "Score: " << score << endl;
+    }
+};
+
+class Result : public Test, public Sports
+{
+private:
+    float total;
+
+public:
+    void display()
+    {
+        total = maths + physics + score;
+        print_number();
+        print_marks();
+        print_score();
+        cout << "Total: " << total << endl;
     }
 };
 
 int main()
 {
-    TreeNode *root = new TreeNode(5);
-    root->left = new TreeNode(3);
-    root->right = new TreeNode(6);
-    root->left->left = new TreeNode(2);
-    root->left->right = new TreeNode(4);
-    root->right->right = new TreeNode(7);
-
-    BSTIterator ino(root);
-    cout << ino.next() << endl;
-    cout << ino.next() << endl;
-    cout << (ino.hasNext() ? "Yes" : "No") << endl;
-    cout << ino.next() << endl;
-    cout << ino.next() << endl;
-    cout << (ino.hasNext() ? "Yes" : "No") << endl;
-    cout << ino.next() << endl;
-    cout << ino.next() << endl;
-    cout << (ino.hasNext() ? "Yes" : "No") << endl;
-
+    Result himanshu;
+    himanshu.set_number(7);
+    himanshu.set_marks(87.0, 94.0);
+    himanshu.set_score(73);
+    himanshu.display();
     return 0;
 }
-
-// https://leetcode.com/problems/binary-search-tree-iterator/
