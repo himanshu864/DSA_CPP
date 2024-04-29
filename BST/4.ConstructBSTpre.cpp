@@ -24,6 +24,29 @@ void inorder(TreeNode *root)
     inorder(root->right);
 }
 
+// big brain recursion
+// based on valid bst logic
+class Solution2
+{
+    TreeNode *helper(vector<int> &preorder, int &i, int bound)
+    {
+        if (i == preorder.size() || preorder[i] >= bound)
+            return NULL;
+
+        TreeNode *root = new TreeNode(preorder[i++]);
+        root->left = helper(preorder, i, root->val);
+        root->right = helper(preorder, i, bound);
+        return root;
+    }
+
+public:
+    TreeNode *bstFromPreorder(vector<int> &preorder)
+    {
+        int i = 0;
+        return helper(preorder, i, 1001);
+    }
+};
+
 /*
 1. Create an empty stack.
 2. Create a root node using the first element of the preorder traversal. Push the root node onto the stack.
