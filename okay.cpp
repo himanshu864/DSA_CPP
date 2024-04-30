@@ -1,87 +1,89 @@
 #include <iostream>
+#include <vector>
+#include <stack>
 using namespace std;
 
-/*
-                 |---------> Class Test -------->|
-Class Student ---                                 ---> Class Result
-                 |--------> Class Sports ------->|
-*/
-
-// We solved the issue of getting roll no in result class twice (from both classes test and sports)
-
-class Student
+class TreeNode
 {
-protected:
-    int roll_no;
-
 public:
-    void set_number(int a)
-    {
-        roll_no = a;
-    }
-    void print_number()
-    {
-        cout << "Your Roll Number: " << roll_no << endl;
-    }
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-class Test : virtual public Student
+void inorder(TreeNode *root)
 {
-protected:
-    float maths, physics;
+    if (!root)
+        return;
 
-public:
-    void set_marks(float m1, float m2)
-    {
-        maths = m1;
-        physics = m2;
-    }
+    inorder(root->left);
+    cout << root->val << " ";
+    inorder(root->right);
+}
 
-    void print_marks()
-    {
-        cout << "Maths: " << maths << endl;
-        cout << "Physics: " << physics << endl;
-    }
-};
-
-class Sports : virtual public Student
+class Solution
 {
-protected:
-    float score;
-
 public:
-    void set_score(int a)
+    void recoverTree(TreeNode *root)
     {
-        score = a;
-    }
-    void print_score()
-    {
-        cout << "Score: " << score << endl;
-    }
-};
+        TreeNode *pre = NULL;
+        TreeNode *prefd = NULL;
+        TreeNode *fd = NULL;
 
-class Result : public Test, public Sports
-{
-private:
-    float total;
+        stack<TreeNode *> st;
+        while (root)
+        {
+            st.push(root);
+            root = root->left;
+        }
 
-public:
-    void display()
-    {
-        total = maths + physics + score;
-        print_number();
-        print_marks();
-        print_score();
-        cout << "Total: " << total << endl;
+        while (st.size())
+        {
+
+            TreeNode *curr = st.top();
+            if (pre && pre->val > curr->val)
+            {
+                if (fd)
+                {
+                    swap(fd->val, curr->val);
+                    return;
+                }
+                else
+                {
+                    prefd = pre;
+                    fd = curr;
+                }
+            }
+            st.pop();
+
+            TreeNode *temp = curr->right;
+            while (temp)
+            {
+                st.push(temp);
+                temp = temp->left;
+            }
+            pre = curr;
+        }
     }
 };
 
 int main()
 {
-    Result himanshu;
-    himanshu.set_number(7);
-    himanshu.set_marks(87.0, 94.0);
-    himanshu.set_score(73);
-    himanshu.display();
+    Solution sol;
+    TreeNode *root = new TreeNode(3);
+    root->left = new TreeNode(1);
+    root->right = new TreeNode(4);
+    root->right->left = new TreeNode(2);
+
+    sol.recoverTree(root);
+
+    inorder(root);
+    cout << endl;
+
     return 0;
 }
+
+// https://leetcode.com/problems/recover-binary-search-tree/
