@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <stack>
+#include <climits>
 using namespace std;
 
 class TreeNode
@@ -14,76 +14,52 @@ public:
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-void inorder(TreeNode *root)
-{
-    if (!root)
-        return;
-
-    inorder(root->left);
-    cout << root->val << " ";
-    inorder(root->right);
-}
-
 class Solution
 {
-public:
-    void recoverTree(TreeNode *root)
+    vector<int> helper(TreeNode *root, int &ans)
     {
-        TreeNode *pre = NULL;
-        TreeNode *prefd = NULL;
-        TreeNode *fd = NULL;
+        // if NULL, important values, so that leaf node sum does change, and mini value in MAX, hence bst check
+        if (!root)
+            return {0, INT_MAX, INT_MIN};
 
-        stack<TreeNode *> st;
-        while (root)
-        {
-            st.push(root);
-            root = root->left;
-        }
+        // Post-order traversal
+        vector<int> l = helper(root->left, ans);
+        vector<int> r = helper(root->right, ans);
 
-        while (st.size())
-        {
+        // For bst, root must be greater than greatest value on left and smaller than smallest value on right
+        // If not bst, sum doesn't matter as we don't want ancestors to be bst, to max is MAXI.
+        // &ans is already carrying max sum of left and right bst if any
+        if (l[2] >= root->val || r[1] <= root->val)
+            return {-1, INT_MIN, INT_MAX};
 
-            TreeNode *curr = st.top();
-            if (pre && pre->val > curr->val)
-            {
-                if (fd)
-                {
-                    swap(fd->val, curr->val);
-                    return;
-                }
-                else
-                {
-                    prefd = pre;
-                    fd = curr;
-                }
-            }
-            st.pop();
+        // If bst, we want to pass total sum of left, right and root. not individual or max
+        int sum = l[0] + r[0] + root->val;
+        // notice &ans is taking max sum total only if bst
+        ans = max(ans, sum);
+        return {sum, min(l[1], root->val), max(root->val, r[2])};
+    }
 
-            TreeNode *temp = curr->right;
-            while (temp)
-            {
-                st.push(temp);
-                temp = temp->left;
-            }
-            pre = curr;
-        }
+    // {total sum, mini val, max val} so far, if bst
+    // {0, INT_MIN, INT_MAX} if not bst, sum doesn't matter
+public:
+    int maxSumBST(TreeNode *root)
+    {
+        int ans = 0;
+        helper(root, ans);
+        return ans;
     }
 };
 
 int main()
 {
+    TreeNode *root = new TreeNode(4);
+    root->left = new TreeNode(3);
+    root->left->left = new TreeNode(1);
+    root->left->right = new TreeNode(2);
+
     Solution sol;
-    TreeNode *root = new TreeNode(3);
-    root->left = new TreeNode(1);
-    root->right = new TreeNode(4);
-    root->right->left = new TreeNode(2);
-
-    sol.recoverTree(root);
-
-    inorder(root);
-    cout << endl;
-
+    cout << sol.maxSumBST(root) << endl;
     return 0;
 }
 
-// https://leetcode.com/problems/recover-binary-search-tree/
+// https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/
