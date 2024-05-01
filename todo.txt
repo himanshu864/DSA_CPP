@@ -1,6 +1,5 @@
 prefix sum
 dynamic programming
 sliding window
-max freq max hashmap
 hashmap, hash table, hash count
 bucket/radix sort
