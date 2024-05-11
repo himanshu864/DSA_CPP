@@ -3,7 +3,9 @@ using namespace std;
 
 int main()
 {
-    int n = 4;
-    cout << n << endl;
+    cout << "Hello my name is Himanshu Aggarwal" << endl;
+    for (int i = 0; i < 3; i++)
+        cout << i << " ";
+    cout << endl;
     return 0;
 }
