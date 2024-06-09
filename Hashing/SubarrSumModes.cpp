@@ -40,3 +40,5 @@ int main()
     cout << sol.checkSubarraySum(nums, k) << endl;
     return 0;
 }
+
+// https://leetcode.com/problems/continuous-subarray-sum/
