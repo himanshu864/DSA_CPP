@@ -1,7 +1,9 @@
 {
     "files.associations": {
+        "*.ejs": "html",
         "ostream": "cpp",
         "*.tcc": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "unordered_map": "cpp"
     }
 }
