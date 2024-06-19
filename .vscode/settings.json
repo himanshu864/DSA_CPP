@@ -4,6 +4,7 @@
         "ostream": "cpp",
         "*.tcc": "cpp",
         "regex": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
     }
 }
