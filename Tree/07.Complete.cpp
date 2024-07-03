@@ -18,21 +18,19 @@ class Solution
 public:
     int countNodes(TreeNode *root)
     {
-        if (root == NULL)
+        if (!root)
             return 0;
 
         int lh = 0, rh = 0;
-        TreeNode *ltemp = root, *rtemp = root;
 
+        TreeNode *ltemp = root, *rtemp = root;
         while (ltemp)
             ltemp = ltemp->left, lh++;
-
         while (rtemp)
             rtemp = rtemp->right, rh++;
 
         if (lh == rh)
             return pow(2, lh) - 1;
-
         return 1 + countNodes(root->left) + countNodes(root->right);
     }
 };
