@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <climits>
 using namespace std;
 
 class TreeNode
@@ -44,7 +45,6 @@ int main()
     TreeNode *root = new TreeNode(9);
     root->left = new TreeNode(-11);
     root->right = new TreeNode(-3);
-    root->right->left = new TreeNode(-3);
     root->right->left = new TreeNode(-6);
     root->right->right = new TreeNode(2);
     root->right->right->right = new TreeNode(2);
