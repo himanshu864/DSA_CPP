@@ -16,12 +16,15 @@ public:
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-class Solution {
-    void helper(TreeNode* root, unordered_set<TreeNode*>& visited, unordered_map<TreeNode*, TreeNode*>& parent, vector<int>& ans, int k) {
+class Solution
+{
+    void helper(TreeNode *root, unordered_set<TreeNode *> &visited, unordered_map<TreeNode *, TreeNode *> &parent, vector<int> &ans, int k)
+    {
         if (visited.count(root))
             return;
 
-        if (k == 0) {
+        if (k == 0)
+        {
             ans.push_back(root->val);
             return;
         }
@@ -37,22 +40,27 @@ class Solution {
     }
 
 public:
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        // do a dfs traversal and store all parents, for upword
-        unordered_map<TreeNode*, TreeNode*> parent;
-        queue<TreeNode*> q;
+    vector<int> distanceK(TreeNode *root, TreeNode *target, int k)
+    {
+        // do a bfs traversal and store all parents, for upword
+        unordered_map<TreeNode *, TreeNode *> parent;
+        queue<TreeNode *> q;
         q.push(root);
-        while (q.size()) {
+        while (q.size())
+        {
             int n = q.size();
-            while (n--) {
-                TreeNode* p = q.front();
+            while (n--)
+            {
+                TreeNode *p = q.front();
                 q.pop();
 
-                if (p->left) {
+                if (p->left)
+                {
                     q.push(p->left);
                     parent[p->left] = p;
                 }
-                if (p->right) {
+                if (p->right)
+                {
                     q.push(p->right);
                     parent[p->right] = p;
                 }
@@ -62,7 +70,7 @@ public:
         // start from target and move - left, right and up
         // keep track of path traveled and visted nodes
         vector<int> ans;
-        unordered_set<TreeNode*> visited;
+        unordered_set<TreeNode *> visited;
         helper(target, visited, parent, ans, k);
         return ans;
     }
@@ -80,17 +88,16 @@ int main()
     root->right->right = new TreeNode(7);
     root->left->left->left = new TreeNode(8);
     root->left->left->right = new TreeNode(9);
-    
-    TreeNode* target = root->left;
+
+    TreeNode *target = root->left;
     int k = 2;
-    
+
     vector<int> ans = sol.distanceK(root, target, k);
-    for(int i : ans)
-    	cout << i << " ";
+    for (int i : ans)
+        cout << i << " ";
     cout << endl;
-    
+
     return 0;
 }
 
 // https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
-
