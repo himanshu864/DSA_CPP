@@ -24,132 +24,41 @@ void inorder(TreeNode *root)
     inorder(root->right);
 }
 
-// genius recursive solution
+// my big-brain recursive solution
 class Solution
 {
 public:
     TreeNode *deleteNode(TreeNode *root, int key)
     {
-        if (root)
-        {
-            // brilliant recursion to search node while connecting parent
-            if (key < root->val)
-                root->left = deleteNode(root->left, key);
-            else if (key > root->val)
-                root->right = deleteNode(root->right, key);
-            else
-            {
-                // if target node is leaf, direct delete
-                if (!root->left && !root->right)
-                    return NULL;
+        // 2. If doesn't exist
+        if (!root)
+            return NULL;
 
-                // for one child, connect parent to that
-                if (!root->left || !root->right)
-                    return root->left ? root->left : root->right;
-
-                // for second degree
-                // find preceding inorder.. i.e rightmost node in left subtree
-                TreeNode *temp = root->left;
-                while (temp->right != NULL)
-                    temp = temp->right;
-                // modify target node to preceding node
-                root->val = temp->val;
-                // and similar delete on preceding node, by another genius searching and modifing recursion
-                root->left = deleteNode(root->left, temp->val);
-            }
-        }
-        return root;
-    }
-};
-
-// my iterative inspired by striver
-// can do better using functions and direct parent connect. but idk
-class Solution
-{
-public:
-    TreeNode *deleteNode(TreeNode *root, int key)
-    {
-        TreeNode *p = NULL;
-        // search node
-        TreeNode *node = root;
-        while (node && node->val != key)
-        {
-            p = node;
-            if (node->val > key)
-                node = node->left;
-            else
-                node = node->right;
-        }
-
-        // if root == NULL or node doesn't exist
-        if (!node)
-            return root;
-
-        // if delete root
-        if (!p)
-        {
-            // handle later, fuck you future me
-            // fuck you too past me
-            // haha lol you both are past me
-            // wait
-            if (!root->left && !root->right)
-                return NULL;
-            else if (!root->left)
-                return root->right;
-            else if (!root->right)
-                return root->left;
-            else
-            {
-                TreeNode *pre = root->left;
-                while (pre->right)
-                    pre = pre->right;
-                pre->right = root->right;
-                return root->left;
-            }
-        }
-
-        // for leaf node, direct delete
-        if (!node->left && !node->right)
-        {
-            if (p->val > node->val)
-                p->left = NULL;
-            else
-                p->right = NULL;
-        }
-        // for single child, direct connect to parent
-        else if (!node->left)
-        {
-            if (p->val > node->val)
-                p->left = node->right;
-            else
-                p->right = node->right;
-        }
-        else if (!node->right)
-        {
-            if (p->val > node->val)
-                p->left = node->left;
-            else
-                p->right = node->left;
-        }
-        // both childs, connect parent to left child
-        // and conect right child to inorder predecessor
+        // 1. Recursively search
+        if (root->val > key)
+            root->left = deleteNode(root->left, key);
+        else if (root->val < key)
+            root->right = deleteNode(root->right, key);
         else
         {
-            TreeNode *store_right = node->right;
-            if (p->val > node->val)
-            {
-                p->left = node->left;
-                node = p->left;
-            }
-            else
-            {
-                p->right = node->left;
-                node = p->right;
-            }
-            TreeNode *pre = node;
-            while (pre->right)
-                pre = pre->right;
-            pre->right = store_right;
+            // 3. If found
+            // connect left-subtree to left of leftmost node of right-subtree
+            TreeNode *leftest = root->right;
+
+            // 4. If right doesn't exist, simply return left-subtree
+            // also takes care edge case, if key node is leaf
+            if (!leftest)
+                return root->left;
+
+            while (leftest->left)
+                leftest = leftest->left;
+            leftest->left = root->left;
+
+            // 5. Return root of modified right-subtree
+            // this replaces key node as child-subtree, thereby deleting it
+            // notice due to recursive searching, we don't need to keep a parent
+            // pointer and manually connect subtree to left/right as child
+            return root->right;
         }
         return root;
     }
@@ -169,6 +78,7 @@ int main()
     cout << endl;
 
     int key = 3;
+    int key = 7;
     root = sol.deleteNode(root, key);
 
     inorder(root);
