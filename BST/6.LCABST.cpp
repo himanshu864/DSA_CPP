@@ -15,6 +15,17 @@ public:
 class Solution
 {
 public:
+    // Recursive
+    TreeNode *LCA(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        if (root->val > p->val && root->val > q->val)
+            return LCA(root->left, p, q);
+        else if (root->val < p->val && root->val < q->val)
+            return LCA(root->right, p, q);
+        return root;
+    }
+
+    // Iterative
     TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
     {
         int a = p->val, b = q->val;

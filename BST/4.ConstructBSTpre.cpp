@@ -26,7 +26,9 @@ void inorder(TreeNode *root)
 
 // big brain recursion
 // based on valid bst logic
-class Solution2
+// Based on logic that left subtree will always have smaller val than root
+// And right will have bigger than root, but smaller that it's parent if root's a left-childs
+class Solution
 {
     TreeNode *helper(vector<int> &preorder, int &i, int bound)
     {
@@ -58,7 +60,7 @@ public:
 5. Return the root of the constructed BST.
 */
 
-class Solution
+class Solution2
 {
 public:
     TreeNode *bstFromPreorder(vector<int> &preorder)
@@ -90,6 +92,37 @@ public:
             }
         }
         return root;
+    }
+};
+
+// My easy recursion
+// Based on logic that inorder is actually inorder(sorted lol)
+// We also know Preorder - Node L R; while Inorder - L Node R
+// => First index of preorder will be root, while Left subtree will have smaller value than root
+// Hence we can split Left and Right subtree based on that
+// Eg : 8 5 1 7 10 12. Here 8 is root. While [5 1 7] will be on left subtree and [10, 12] on right
+// Easy index and recursion to solve rest
+class Solution
+{
+    TreeNode *helper(vector<int> &preorder, int s, int e)
+    {
+        if (s > e)
+            return NULL;
+
+        int x = s + 1;
+        while (x < preorder.size() && preorder[x] < preorder[s])
+            x++;
+
+        TreeNode *root = new TreeNode(preorder[s]);
+        root->left = helper(preorder, s + 1, x - 1);
+        root->right = helper(preorder, x, e);
+        return root;
+    }
+
+public:
+    TreeNode *bstFromPreorder(vector<int> &preorder)
+    {
+        return helper(preorder, 0, preorder.size() - 1);
     }
 };
 
