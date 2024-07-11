@@ -13,6 +13,7 @@ public:
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+// Since inorder is sorted. Apply two pointer approach using BST Iterators
 class Solution
 {
 public:

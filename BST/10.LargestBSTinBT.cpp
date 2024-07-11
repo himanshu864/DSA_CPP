@@ -14,6 +14,9 @@ public:
     TreeNode(int x, TreeNode *left, TreeNode *right) : data(x), left(left), right(right) {}
 };
 
+// This is a great question since we want to check every subtree for BST
+// and need to send boundaries from ground-up. Which is unique
+
 // {size, Mini value, maxi val}
 // Left child max must be smaller than root val
 // right child mini must be greater than root val
@@ -33,8 +36,7 @@ vector<int> helper(TreeNode *root)
 
 int largestBST(TreeNode *root)
 {
-    vector<int> ans = helper(root);
-    return ans[0];
+    return helper(root)[0];
 }
 
 int main()

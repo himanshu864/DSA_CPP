@@ -14,6 +14,9 @@ public:
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+// This is a great question since we want to check every subtree for BST
+// and need to send boundaries from ground-up. Which is unique
+
 class Solution
 {
     vector<int> helper(TreeNode *root, int &ans)
@@ -22,19 +25,19 @@ class Solution
         if (!root)
             return {0, INT_MAX, INT_MIN};
 
-        // Post-order traversal
+        // Post-order recursion
         vector<int> l = helper(root->left, ans);
         vector<int> r = helper(root->right, ans);
 
         // For bst, root must be greater than greatest value on left and smaller than smallest value on right
-        // If not bst, sum doesn't matter as we don't want ancestors to be bst, to max is MAXI.
-        // &ans is already carrying max sum of left and right bst if any
+        // If not bst, sum doesn't matter as we don't want ancestors to be bst, so max is MAXI.
+        // &ans is already carrying max sum of left and right bst, if any
         if (l[2] >= root->val || r[1] <= root->val)
             return {-1, INT_MIN, INT_MAX};
 
         // If bst, we want to pass total sum of left, right and root. not individual or max
         int sum = l[0] + r[0] + root->val;
-        // notice &ans is taking max sum total only if bst
+        // notice &ans is taking max sum, only if bst
         ans = max(ans, sum);
         return {sum, min(l[1], root->val), max(root->val, r[2])};
     }
