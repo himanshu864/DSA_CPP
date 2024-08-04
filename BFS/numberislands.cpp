@@ -4,7 +4,7 @@ using namespace std;
 
 class Solution
 {
-    void bfs(vector<vector<char>> &grid, int i, int j)
+    void dfs(vector<vector<char>> &grid, int i, int j)
     {
         if (i == -1 || j == -1 || i == grid.size() || j == grid[0].size())
             return;
@@ -12,10 +12,10 @@ class Solution
             return;
 
         grid[i][j] = '0';
-        bfs(grid, i + 1, j);
-        bfs(grid, i, j + 1);
-        bfs(grid, i - 1, j);
-        bfs(grid, i, j - 1);
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j - 1);
     }
 
 public:
@@ -26,7 +26,7 @@ public:
             for (int j = 0; j < grid[0].size(); j++)
                 if (grid[i][j] == '1')
                 {
-                    bfs(grid, i, j);
+                    dfs(grid, i, j);
                     ans++;
                 }
         return ans;
