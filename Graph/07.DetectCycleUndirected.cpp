@@ -77,3 +77,5 @@ int main()
     cout << "cycle " << (sol.isCycle(V, adj) ? "yes" : "no") << endl;
     return 0;
 }
+
+// https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1
