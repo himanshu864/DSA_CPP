@@ -3,23 +3,27 @@
 #include <algorithm>
 using namespace std;
 
+/*
+visited[i]  => -1: Not Visited
+            => 0 : Visited and is part of a cycle (i.e., not safe).
+            => 1 : Visited and is safe.
+
+If a node i is part of a cycle or leads to a node that is part of a cycle, it's marked as not safe.
+If all adjacent nodes from i lead to safe nodes or are terminal nodes, then i is safe.
+*/
+
 class Solution
 {
-    vector<int> ans;
     bool dfs(vector<vector<int>> &graph, vector<int> &visited, int i)
     {
         if (visited[i] != -1)
             return visited[i] == 1;
 
-        visited[i] = 2; // Loading
+        visited[i] = 0; // Rec Stack
         for (int v : graph[i])
             if (!dfs(graph, visited, v))
-            {
-                visited[i] = 0;
                 return false;
-            }
 
-        ans.push_back(i);
         visited[i] = 1;
         return true;
     }
@@ -28,11 +32,12 @@ public:
     vector<int> eventualSafeNodes(vector<vector<int>> &graph)
     {
         int n = graph.size();
+        vector<int> ans;
         vector<int> visited(n, -1);
-        for (int i = 0; i < n; i++)
-            dfs(graph, visited, i);
 
-        sort(ans.begin(), ans.end());
+        for (int i = 0; i < n; i++)
+            if (dfs(graph, visited, i))
+                ans.push_back(i);
         return ans;
     }
 };

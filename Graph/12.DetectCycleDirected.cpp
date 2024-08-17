@@ -1,56 +1,82 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
-bool dfs(vector<vector<int>> &A, vector<bool> &visited, vector<bool> &path, int v)
+bool dfs(vector<vector<int>> &A, vector<int> &state, int v)
 {
-    // check cycle
-    if (path[v])
+    // If the node is currently in the recursion stack, it's a cycle
+    if (state[v] == 1)
         return true;
-    // check visited
-    if (visited[v])
+
+    // If the node is fully processed, it's safe
+    if (state[v] == 2)
         return false;
 
-    // dfs on path
-    path[v] = true;
-    visited[v] = true;
-    for (auto x : A[v])
-        if (dfs(A, visited, path, x))
+    // Mark the node as visited (entering recursion stack)
+    state[v] = 1;
+
+    for (int x : A[v])
+        if (dfs(A, state, x))
             return true;
 
-    // visited but not on path anymore
-    path[v] = false;
+    // Mark the node as fully processed (exiting recursion stack)
+    state[v] = 2;
     return false;
 }
 
 int detectCycleInDirectedGraph(int n, vector<pair<int, int>> &edges)
 {
-    // To prevent repeating dfs
-    vector<bool> visited(n + 1, false);
-    // To check if already visited same path. i.e. Recursive Stack. Hence Cyclic.
-    vector<bool> path(n + 1, false);
-
-    // Convert to Adjacency List
     vector<vector<int>> A(n + 1);
-    for (auto e : edges)
+    for (auto &e : edges)
         A[e.first].push_back(e.second);
 
+    // State vector to track visited and path
+    vector<int> state(n + 1, 0);
+
     for (int v = 1; v <= n; v++)
-        if (dfs(A, visited, path, v))
+        if (state[v] == 0 && dfs(A, state, v))
             return true;
+
     return false;
+}
+
+// BFS via Toposort
+int detectCycleInDirectedGraphBFS(int n, vector<pair<int, int>> &edges)
+{
+    vector<vector<int>> A(n + 1);
+    for (auto &e : edges)
+        A[e.first].push_back(e.second);
+
+    vector<int> topoSort;
+    vector<int> indegree(n + 1);
+    for (int v = 1; v <= n; v++)
+        for (int u : A[v])
+            indegree[u]++;
+
+    queue<int> q;
+    for (int v = 1; v <= n; v++)
+        if (indegree[v] == 0)
+            q.push(v);
+
+    while (q.size())
+    {
+        int v = q.front();
+        q.pop();
+        topoSort.push_back(v);
+        for (int u : A[v])
+            if (--indegree[u] == 0)
+                q.push(u);
+    }
+    return topoSort.size() != n;
 }
 
 int main()
 {
     int n = 5;
     vector<pair<int, int>> edges = {{1, 2}, {4, 1}, {2, 4}, {3, 4}, {5, 2}, {1, 3}};
-    // int n = 10;
-    // vector<pair<int, int>> edges = {{1, 2}, {4, 5}, {5, 9}, {5, 10}, {5, 1}, {5, 3}, {6, 7}};
     cout << detectCycleInDirectedGraph(n, edges) << endl;
     return 0;
 }
-
-// could use same array with 1 for visited and 2 for path.
 
 // https://www.naukri.com/code360/problems/detect-cycle-in-a-directed-graph_1062626
