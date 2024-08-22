@@ -41,36 +41,6 @@ int detectCycleInDirectedGraph(int n, vector<pair<int, int>> &edges)
     return false;
 }
 
-// BFS via Toposort
-int detectCycleInDirectedGraphBFS(int n, vector<pair<int, int>> &edges)
-{
-    vector<vector<int>> A(n + 1);
-    for (auto &e : edges)
-        A[e.first].push_back(e.second);
-
-    vector<int> topoSort;
-    vector<int> indegree(n + 1);
-    for (int v = 1; v <= n; v++)
-        for (int u : A[v])
-            indegree[u]++;
-
-    queue<int> q;
-    for (int v = 1; v <= n; v++)
-        if (indegree[v] == 0)
-            q.push(v);
-
-    while (q.size())
-    {
-        int v = q.front();
-        q.pop();
-        topoSort.push_back(v);
-        for (int u : A[v])
-            if (--indegree[u] == 0)
-                q.push(u);
-    }
-    return topoSort.size() != n;
-}
-
 int main()
 {
     int n = 5;
