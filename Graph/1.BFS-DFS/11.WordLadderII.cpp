@@ -7,6 +7,7 @@
 using namespace std;
 
 // Just put entire word sequences into queue and proceed same as Word-ladder-I
+// For Interviews?
 // Memory Limit Exceeded!
 class Solution
 {
@@ -60,6 +61,7 @@ public:
 };
 
 // Striver Efficient Solution
+// Competitive Programming?
 class Solution
 {
     unordered_map<int, unordered_set<string>> map;
