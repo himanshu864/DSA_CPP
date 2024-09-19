@@ -1,11 +1,5 @@
 {
     "files.associations": {
-        "*.ejs": "html",
-        "ostream": "cpp",
-        "*.tcc": "cpp",
-        "regex": "cpp",
-        "unordered_map": "cpp",
-        "unordered_set": "cpp",
-        "iostream": "cpp"
+        "vector": "cpp"
     }
 }
