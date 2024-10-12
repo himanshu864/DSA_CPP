@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-// Recursion
+// Recursion - Time : O(2^(m + n)) & Space - O(m + n)
 class Solution1
 {
     int helper(vector<vector<int>> &grid, int i, int j)
@@ -25,7 +25,7 @@ public:
     }
 };
 
-// Memoization
+// Memoization - Time : O(m * n) & Space : O(m + n) - stack
 class Solution2
 {
     int helper(vector<vector<int>> &grid, int i, int j)
@@ -54,7 +54,7 @@ public:
     }
 };
 
-// Tabulation ig
+// Tabulation - Time : O(m * n) & Space : O(m + n) - dp
 class Solution3
 {
 public:
@@ -62,44 +62,46 @@ public:
     {
         int m = grid.size();
         int n = grid[0].size();
-
-        if (grid[0][0] == 1 || grid[m - 1][n - 1] == 1)
-            return 0;
-
-        vector<vector<long>> dp(m, vector<long>(n, -1));
-
+        vector<vector<long>> dp(m + 1, vector<long>(n + 1));
+        dp[m - 1][n] = 1; // so that dp[m - 1][n - 1] = down + right = 0 + 1 = 1
         for (int i = m - 1; i >= 0; i--)
             for (int j = n - 1; j >= 0; j--)
-            {
-                if (i == m - 1 && j == n - 1)
-                    dp[i][j] = 1;
-                else if (grid[i][j] != 1)
-                {
-                    long down = (i + 1 < m) ? dp[i + 1][j] : 0;
-                    long right = (j + 1 < n) ? dp[i][j + 1] : 0;
-                    dp[i][j] = down + right;
-                }
-                else
-                    dp[i][j] = 0;
-            }
+                if (grid[i][j] != 1)
+                    dp[i][j] = dp[i + 1][j] + dp[i][j + 1];
         return dp[0][0];
     }
 };
-;
+
+// Space Optimization - Time : O(m * n) & Space : O(n)
+class Solution4
+{
+public:
+    int uniquePathsWithObstacles(vector<vector<int>> &grid)
+    {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<long> dp(n + 1);
+        dp[n - 1] = 1;
+        for (int i = m - 1; i >= 0; i--)
+            for (int j = n - 1; j >= 0; j--)
+            {
+                if (grid[i][j] == 1)
+                    dp[j] = 0;
+                else
+                    dp[j] += dp[j + 1];
+            }
+        return dp[0];
+    }
+};
 
 int main()
 {
-    Solution1 sol;
+    Solution4 sol;
     vector<vector<int>> grid = {
         {0, 0, 0},
         {0, 1, 0},
         {0, 0, 0},
     };
-    // vector<vector<int>> grid = {
-    //     {0, 0},
-    //     {1, 1},
-    //     {0, 0},
-    // };
     cout << sol.uniquePathsWithObstacles(grid) << endl;
     return 0;
 }
