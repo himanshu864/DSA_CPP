@@ -1,5 +1,6 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
+#define int long long
 
 // i've used help for modulo becoz i was struggling
 // remind me to study this bs again
@@ -56,7 +57,7 @@ int countAnagrams(string s)
     return ans;
 }
 
-int main()
+signed main()
 {
     string s = "hot too";
     cout << countAnagrams(s);
