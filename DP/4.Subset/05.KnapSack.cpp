@@ -93,3 +93,21 @@ int main()
 }
 
 // https://www.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1
+
+/*
+If each item can be taken any number of times.
+
+class Solution
+{
+public:
+    int knapSack(int N, int W, int val[], int wt[]) {
+        vector<int> dp(W + 1);
+        for (int i = 0; i < N; i++)
+            for (int w = wt[i]; w <= W; w++)
+                dp[w] = max(val[i] + dp[w - wt[i]], dp[w]);
+        return dp[W];
+    }
+};
+
+// https://www.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+*/

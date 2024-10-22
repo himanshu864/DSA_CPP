@@ -94,10 +94,9 @@ public:
     {
         vector<int> dp(amount + 1, amount + 1);
         dp[0] = 0;
-        for (int i : coins)
-            for (int j = 1; j <= amount; j++)
-                if (i <= j)
-                    dp[j] = min(dp[j - i] + 1, dp[j]);
+        for (int x : coins)
+            for (int j = x; j <= amount; j++)
+                dp[j] = min(dp[j - x] + 1, dp[j]);
         return dp[amount] <= amount ? dp[amount] : -1;
     }
 };
