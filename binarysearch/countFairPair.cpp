@@ -10,7 +10,7 @@ public:
         long long ans = 0;
         int n = nums.size();
         sort(nums.begin(), nums.end());
-        for (int i = 0; i < n - 1; i++)
+        for (int i = 0; i < n; i++)
         {
             // BS the smallest index with sum >= lower
             int s = i + 1;
@@ -45,7 +45,8 @@ public:
             }
 
             // From index i, we can make (y - x + 1) fair pairs
-            ans += (y - x + 1);
+            if (x != i && y != i)
+                ans += (y - x + 1);
         }
         return ans;
     }
