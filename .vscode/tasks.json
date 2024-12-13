@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Run Competitive Program",
+      "type": "shell",
+      "command": "/opt/homebrew/bin/g++-14",
+      "args": ["-std=c++17", "-Wall", "-o", "okay", "okay.cpp"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "detail": "Compiles okay.cpp into an executable"
+    },
+    {
+      "label": "Run Competitive Program",
+      "type": "shell",
+      "command": "./okay < input.txt > output.txt",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "Build, Run, and Hide Terminal",
+      "type": "shell",
+      "dependsOn": [
+        "Build and Run Competitive Program",
+        "Run Competitive Program"
+      ],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    }
+  ]
+}
