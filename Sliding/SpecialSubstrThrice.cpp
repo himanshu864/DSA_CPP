@@ -8,49 +8,38 @@ class Solution
 public:
     int maximumLength(string s)
     {
-        int ans = -1;
         int n = s.size();
         // freq[i][j] maps frequency of special substr of char s[i] of j size
-        // eg: freq[0][2] = 1 => aa
-        vector<vector<int>> freq(26, vector<int>(n + 1, 0));
-
-        // map freq of special substrings in a string iteration
-        // note freq of overlapping substrings aren't accounted for yet
-        // eg : aaaa, here a is only counted once, similarly aa, aaa, and aaaa
-        // we will count prefix sum is reverse to remedy that
-        // eg: freq[aaaa] = 1, freq[aaa] = 1 + freq[aaaa], freq[aa] = 2 + 1, ...
-        // because aaaa contains two aaa's. And we have already counted the first aaa
-        // similarly one aaa contains two aa's.
-        // i don't fucking know bro. suck my dick.. read the solution cunt
-        char pre = s[0];
-        int len = 1;
+        // Note: for string "aaaa", we only count "a", "aa", "aaa", "aaaa" only once
+        // And calc. actual freq by adding suffix.
+        // Eg: freq[aaaa] = 1; [aaa] = 1 + 1; [aa] = 1 + 2; [a] = 1 + 3;
+        vector<vector<int>> freq(26, vector<int>(n + 1));
         freq[s[0] - 'a'][1] = 1;
+        int count = 1;
         for (int i = 1; i < n; i++)
         {
-            if (pre != s[i])
-            {
-                pre = s[i];
-                len = 1;
-            }
+            if (s[i] == s[i - 1])
+                count++;
             else
-                len++;
-            freq[pre - 'a'][len] += 1;
+                count = 1;
+            freq[s[i] - 'a'][count] += 1;
         }
 
+        int ans = 0;
+        // for each character, find longest special with freq >= 3
         for (int i = 0; i < 26; i++)
         {
-            int preSum = 0;
-            for (int j = n; j >= 1; j--)
+            int count = 0;
+            for (int j = n; j > 0; j--)
             {
-                preSum += freq[i][j];
-                if (preSum >= 3)
+                count += freq[i][j];
+                if (count >= 3)
                 {
                     ans = max(ans, j);
-                    break;
+                    continue;
                 }
             }
         }
-
         return ans;
     }
 };
