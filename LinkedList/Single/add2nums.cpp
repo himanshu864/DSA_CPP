@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 class ListNode
@@ -12,7 +11,7 @@ public:
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-void print(ListNode *&head)
+void printLL(ListNode *&head)
 {
     ListNode *temp = head;
     while (temp != NULL)
@@ -20,56 +19,56 @@ void print(ListNode *&head)
         cout << temp->val << " ";
         temp = temp->next;
     }
-    cout << endl;
+    cout << '\n';
 }
 
 ListNode *arrtoLL(vector<int> &nums)
 {
     ListNode *head = new ListNode(nums[0]);
     ListNode *it = head;
-    for (int i = 1; i < nums.size(); i++)
+    for (int i : nums)
     {
-        ListNode *temp = new ListNode(nums[i]);
+        ListNode *temp = new ListNode(i);
         it->next = temp;
         it = it->next;
     }
     return head;
 }
 
-ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
+class Solution
 {
-    ListNode *head = new ListNode();
-    ListNode *it = head;
-    int carry = 0;
-    while (l1 || l2 || carry)
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
     {
-        int sum = carry;
-        if (l1)
+        ListNode *dummy = new ListNode();
+        ListNode *tail = dummy;
+        int carry = 0;
+        while (l1 || l2 || carry)
         {
-            sum += l1->val;
-            l1 = l1->next;
+            int sum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + carry;
+            carry = sum / 10;
+
+            tail->next = new ListNode(sum % 10);
+            tail = tail->next;
+
+            if (l1)
+                l1 = l1->next;
+            if (l2)
+                l2 = l2->next;
         }
-        if (l2)
-        {
-            sum += l2->val;
-            l2 = l2->next;
-        }
-        carry = sum / 10;
-        ListNode *temp = new ListNode(sum % 10);
-        it->next = temp;
-        it = temp;
+        return dummy->next;
     }
-    return head->next;
-}
+};
 
 int main()
 {
+    Solution sol;
     vector<int> nums1 = {2, 4, 3, 0, 9};
     vector<int> nums2 = {5, 6, 4, 0, 5};
     ListNode *l1 = arrtoLL(nums1);
     ListNode *l2 = arrtoLL(nums2);
-    ListNode *ans = addTwoNumbers(l1, l2);
-    print(ans);
+    ListNode *ans = sol.addTwoNumbers(l1, l2);
+    printLL(ans);
     return 0;
 }
 
