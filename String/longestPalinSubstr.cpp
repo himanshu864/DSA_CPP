@@ -29,41 +29,41 @@ public:
     }
 };
 
-// DP - O(N2) && O(N2)
+// Bottom Up DP - O(N2) && O(N2)
 class Solution2
 {
-    int f(string &s, vector<vector<int>> &dp, int i, int j)
-    {
-        if (dp[i][j] != -1)
-            return dp[i][j];
-        if (i == j)
-            return dp[i][j] = 1;
-        if (i + 1 == j)
-            return dp[i][j] = s[i] == s[j];
-        if (s[i] != s[j])
-            return dp[i][j] = 0;
-        return dp[i][j] = f(s, dp, i + 1, j - 1);
-    }
-
 public:
     string longestPalindrome(string s)
     {
-        int startIdx = 0, maxLen = 1;
         int n = s.size();
-        // memoize if substr[i...j] is palindrome or not
-        vector<vector<int>> dp(n, vector<int>(n, -1));
+        vector<int> str = {0, 1}; // {start_index, max_length}
+        vector<vector<bool>> dp(n, vector<bool>(n, false));
+
+        // All substrings of length 1 are palindromes
         for (int i = 0; i < n; i++)
-            for (int j = i; j < n; j++)
+            dp[i][i] = true;
+
+        // Check all substrings of length 2
+        for (int i = 0; i < n - 1; i++)
+            if (s[i] == s[i + 1])
             {
-                dp[i][j] = f(s, dp, i, j);
-                if (dp[i][j] && j - i + 1 > maxLen)
+                dp[i][i + 1] = true;
+                str = {i, 2};
+            }
+
+        // Check substrings of length 3 or more
+        for (int len = 3; len <= n; len++)
+            for (int i = 0; i <= n - len; i++)
+            {
+                int j = i + len - 1;
+                if (s[i] == s[j] && dp[i + 1][j - 1])
                 {
-                    maxLen = j - i + 1;
-                    startIdx = i;
+                    dp[i][j] = true;
+                    str = {i, len};
                 }
             }
 
-        return s.substr(startIdx, maxLen);
+        return s.substr(str[0], str[1]);
     }
 };
 
