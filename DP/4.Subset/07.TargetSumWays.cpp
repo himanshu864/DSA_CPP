@@ -1,6 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <numeric>
+#include <bits/stdc++.h>
 using namespace std;
 
 // Recursion
@@ -52,11 +50,11 @@ public:
         int n = nums.size(), maxi = 0;
         vector<vector<int>> dp(n + 1, vector<int>(4001));
         dp[0][2000] = 1; // 1-indexed for n and 2000-indexed for target
-        for (int i : nums)
+        for (int i = 0; i < nums.size(); i++)
         {
-            maxi += i;
+            maxi += nums[i];
             for (int t = 2000 - maxi; t <= 2000 + maxi; t++)
-                dp[i + 1][t] = dp[i][t - i] + dp[i][t + i];
+                dp[i + 1][t] = dp[i][t - nums[i]] + dp[i][t + nums[i]];
         }
         return dp[n][target + 2000];
     }
@@ -106,11 +104,10 @@ public:
     int findTargetSumWays(vector<int> &nums, int target)
     {
         int totalSum = accumulate(nums.begin(), nums.end(), 0);
-        //
         if ((totalSum + target) % 2 || totalSum < abs(target))
             return 0;
-        int sum = (totalSum + target) / 2;
 
+        int sum = (totalSum + target) / 2;
         vector<int> dp(sum + 1, 0);
         dp[0] = 1;
         for (int num : nums)
