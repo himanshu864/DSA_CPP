@@ -1,20 +1,24 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-int exponent(int a, int b)
+// Recursive Fast Exponentiation
+int recFastExp(int a, int b)
 {
-    int ans = 1;
-    while (b--)
-        ans *= a;
-    return ans;
+    if (b == 0)
+        return 1;
+    if (b % 2)
+        return a * recFastExp(a, b - 1);
+    int x = recFastExp(a, b / 2);
+    return x * x;
 }
 
-int fastexp(int a, int b)
+// Iterative Fast Exponentiation
+int itrFastExp(int a, int b)
 {
     int ans = 1;
     while (b > 0)
     {
-        if (b % 2 == 1)
+        if (b % 2)
             ans *= a;
         a = a * a;
         b /= 2;
@@ -22,28 +26,25 @@ int fastexp(int a, int b)
     return ans;
 }
 
+// Inverse Exponentiation
+double myPow(double x, int n)
+{
+    if (n < 0)
+        return 1.0 / myPow(x, -n);
+    if (n == 0)
+        return 1;
+    if (n == 2)
+        return x * x;
+    return (n % 2 ? x : 1) * myPow(myPow(x, n / 2), 2);
+}
+
 int main()
 {
     int a = 3;
     int b = 4;
     cout << a << " " << b << endl;
-    cout << "a^b: " << exponent(a, b) << endl;
-    cout << "a^b: " << fastexp(a, b) << endl;
+    cout << "a^b: " << itrFastExp(a, b) << endl;
     return 0;
-}
-
-double myPow(double x, int n)
-{
-    if (n < 0)
-        return 1 / (x * myPow(x, -(n + 1)));
-    if (n == 0)
-        return 1;
-    if (n == 2)
-        return x * x;
-    if (n % 2 == 0)
-        return myPow(myPow(x, n / 2), 2);
-    else
-        return x * myPow(myPow(x, n / 2), 2);
 }
 
 // https://leetcode.com/problems/powx-n/
