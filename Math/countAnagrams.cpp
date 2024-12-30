@@ -6,14 +6,19 @@ class Solution
     const int mod = 1e9 + 7;
     vector<int> fact, invFact;
 
+    int mult(int a, int b)
+    {
+        return (a * 1LL * b) % mod;
+    }
+
     int modExp(int a, int b)
     {
         if (b == 0)
             return 1;
         if (b & 1)
-            return (a * 1LL * modExp(a, b - 1)) % mod;
+            return mult(a, modExp(a, b - 1));
         int x = modExp(a, b >> 1);
-        return (x * 1LL * x) % mod;
+        return mult(x, x);
     }
     int inverse(int a)
     {
@@ -25,12 +30,12 @@ class Solution
         fact.resize(n + 1);
         fact[0] = 1;
         for (int i = 1; i <= n; i++)
-            fact[i] = (i * 1LL * fact[i - 1]) % mod;
+            fact[i] = mult(fact[i - 1], i);
 
         invFact.resize(n + 1);
         invFact[n] = inverse(fact[n]);
         for (int i = n - 1; i >= 0; i--)
-            invFact[i] = (invFact[i + 1] * 1LL * (i + 1)) % mod;
+            invFact[i] = mult(invFact[i + 1], i + 1);
     }
 
 public:
@@ -57,10 +62,10 @@ public:
             for (char c : word)
                 freq[c - 'a']++;
 
-            ans = (ans * 1LL * fact[word.size()]) % mod;
+            ans = mult(ans, fact[word.size()]);
             for (int i : freq)
                 if (i > 1)
-                    ans = (ans * 1LL * invFact[i]) % mod;
+                    ans = mult(ans, invFact[i]);
         }
         return ans;
     }
