@@ -41,44 +41,67 @@ public:
     }
 };
 
-class Solution
+// Using DSU on total no. of components
+class Solution1
 {
 public:
     int makeConnected(int n, vector<vector<int>> &connections)
     {
-        // Minimum no. of edges we need to change is order to make graph connected
-        // => (Total no. of components - 1);
-        // becoz we'll require 2 edges to join 3 components(disjoint sets)
-        // And we'll check if it's possible to remove that many edges by finding extra edges from connections
-        // that do not make up the MST
-        // Use MST to achieve that
+        int totalEdges = connections.size();
+        int requiredEdges = n - 1;
+        if (totalEdges < requiredEdges)
+            return -1;
+
         DisjointSet dsu(n);
-        int extraEdges = 0;
         for (vector<int> e : connections)
-        {
-            if (dsu.find(e[0]) == dsu.find(e[1]))
-                extraEdges++;
             dsu.unionSet(e[0], e[1]);
-        }
 
         int noOfIslands = 0;
         for (int i = 0; i < n; i++)
             if (dsu.find(i) == i)
                 noOfIslands++;
 
-        if (noOfIslands - 1 > extraEdges)
+        return noOfIslands - 1;
+    }
+};
+
+// Finding extra connections using DSU
+class Solution2
+{
+public:
+    int makeConnected(int n, vector<vector<int>> &connections)
+    {
+        int totalEdges = connections.size();
+        int requiredEdges = n - 1;
+        if (totalEdges < requiredEdges)
             return -1;
 
-        return noOfIslands - 1;
+        // find extra connections using DSU
+        int extra = 0;
+        DisjointSet DSU(n);
+        for (vector<int> edge : connections)
+        {
+            int u = edge[0];
+            int v = edge[1];
+            if (DSU.find(u) == DSU.find(v))
+                extra++;
+            else
+                DSU.unionSet(u, v);
+        }
+
+        // solve problem statement
+        int correct = totalEdges - extra;
+        int missing = requiredEdges - correct;
+        return missing;
     }
 };
 
 int main()
 {
-    Solution sol;
+    Solution1 sol;
     int n = 4;
     vector<vector<int>> connections = {{0, 1}, {0, 2}, {1, 2}};
-    cout << sol.makeConnected(n, connections);
+    cout << sol.makeConnected(n, connections) << endl;
     return 0;
 }
 

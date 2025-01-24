@@ -13,7 +13,8 @@ Here we are basically calc all terminal nodes and then backtracking to see which
 If any node has other edges which don't origin from terminal nodes, they aren't safe and won't be indegree 0
 */
 
-class Solution
+// Topological Sort
+class Solution2
 {
 public:
     vector<int> eventualSafeNodes(vector<vector<int>> &graph)
@@ -44,6 +45,37 @@ public:
                     q.push(v);
         }
         sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+// DFS
+class Solution
+{
+    bool DFS(vector<vector<int>> &graph, vector<int> &state, int u)
+    {
+        state[u] = 0;
+        for (int v : graph[u])
+        {
+            if (state[v] == -1)
+                DFS(graph, state, v);
+            if (state[v] == 0)
+                return false;
+        }
+        return state[u] = 1;
+    }
+
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>> &graph)
+    {
+        int n = graph.size();
+        vector<int> state(n, -1), ans;
+        for (int i = 0; i < n; i++)
+            if (state[i] == -1)
+                DFS(graph, state, i);
+        for (int i = 0; i < n; i++)
+            if (state[i] == 1)
+                ans.push_back(i);
         return ans;
     }
 };
