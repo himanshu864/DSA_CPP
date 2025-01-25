@@ -1,6 +1,11 @@
 {
   "files.associations": {
     "output.txt": "plaintext",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "__split_buffer": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "vector": "cpp"
   }
 }
