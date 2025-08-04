@@ -10,14 +10,14 @@ class Array
 public:
     Array()
     {
-        count++;
-        cout << "Calling construtor for class n" << count << endl;
+        ::count++;
+        cout << "Calling construtor for class n" << ::count << endl;
         data = new int[100];
     }
     ~Array()
     {
-        cout << "Calling Destructor for class n" << count << endl;
-        count--;
+        cout << "Calling Destructor for class n" << ::count << endl;
+        ::count--;
         delete[] data;
     }
     void setZero(int temp)
